@@ -5,7 +5,7 @@ import { v } from "convex/values";
 
 export default defineSchema({
   files: defineTable({ name: v.string(),
-    orgId:v.string()
-   }),
+    orgId: v.string()
+   }).index("by_orgId",["orgId"]) 
   
 });

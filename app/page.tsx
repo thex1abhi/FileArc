@@ -2,15 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
-import { SignedOut, useOrganization } from "@clerk/clerk-react";
+import { SignedOut, useOrganization, useUser } from "@clerk/clerk-react";
 import { SignedIn, SignInButton, SignOutButton } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 
 export default function Home() {
-  const  { organzation }  = useOrganization(); 
-   console.log( organzation. )
+  const organization = useOrganization();
+  const user = useUser()
+  let orgId: string | undefined = undefined;
+
+  if (organization.isLoaded && user.isLoaded) {
+    orgId = organization.organization?.id ?? user.user?.id
+  }
+  console.log(organization.organization?.id)
   const createFile = useMutation(api.files.createfile)
-  const files = useQuery(api.files.getFiles)
+  const files = useQuery(api.files.getFiles,
+    orgId ? { orgId } : "skip")
 
   return (
     <>
@@ -32,11 +39,11 @@ export default function Home() {
           return <div key={file._id}> {file.name} </div>
         })}
 
-        <Button onClick={() => { 
-          if(!organzation) return ;
+        <Button onClick={() => {
+          if (!orgId) return;
           createFile({
             name: "hello next.js ",
-            orgId:organzation.id
+            orgId,
           })
         }} >Click Me </Button>
 
