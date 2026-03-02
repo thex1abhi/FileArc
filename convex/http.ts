@@ -25,15 +25,19 @@ http.route({
       switch (result.type) {
         case "user.created":
           await ctx.runMutation(internal.users.createUser, {
-            tokenIdentifier: `https://${process.env.CLERK_HOSTNAME}|${result.data.id}`,
-            name: `${result.data.first_name ?? ""} ${
-              result.data.last_name ?? ""
-            }`,
-            image: result.data.image_url,
+            tokenIdentifier: `https://endless-catfish-67.clerk.accounts.dev|${result.data.id}`,
+
           });
           break;
-      
-       
+
+        case "organizationMembership.created":
+
+          await ctx.runMutation(internal.users.addOrgIdToUser, {
+            tokenIdentifier: `https://endless-catfish-67.clerk.accounts.dev|${result.data.public_user_data.user_id}`,
+            orgId: result.data.organization.id
+          })
+          break;
+
       }
 
       return new Response(null, {
