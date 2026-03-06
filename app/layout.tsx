@@ -37,7 +37,7 @@ export default function RootLayout({
             {children} 
             </ConvexClientProvider>
         </ClerkProvider> 
-          <Toaster richColors position="top-center" duration={1000} /> 
+          <Toaster  position="top-center" duration={1000} /> 
       </body>
     </html>
   );

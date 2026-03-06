@@ -53,18 +53,22 @@ export default function UploadButton() {
       body: values.file[0],
     });
     const { storageId } = await result.json();
+    console.log(values.file[0].type)
+
+
 
     try {
       await createFile({
         name: values.title,
         fileId: storageId,
         orgId,
+        type: "image",
       })
       form.reset();
       setIsFileDialogOpen(false);
       toast.success("File uplaoded Successfully")
     }
-    catch  {
+    catch {
       toast.error("Something went wrong")
     }
 
@@ -77,87 +81,89 @@ export default function UploadButton() {
   }
   console.log(organization.organization?.id)
   const createFile = useMutation(api.files.createfile)
-  
+
 
   return (
-    
-          <Dialog open={isFileDialogOpen} onOpenChange={setIsFileDialogOpen} >
-            <DialogTrigger asChild >
-              <Button  >Upload File
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Upload Files to Organization </DialogTitle>
-                <DialogDescription>
-                  <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-                    <FieldGroup>
-                      <Controller
-                        name="title"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                          <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="form-rhf-demo-title">
-                              Title of your file
-                            </FieldLabel>
-                            <Input
-                              {...field}
-                              id="form-rhf-demo-title"
-                              aria-invalid={fieldState.invalid}
-                              placeholder="Enter title"
-                              autoComplete="off"
-                            />
-                            {fieldState.invalid && (
-                              <FieldError errors={[fieldState.error]} />
-                            )}
-                          </Field>
-                        )}
+
+    <Dialog open={isFileDialogOpen} onOpenChange={setIsFileDialogOpen} >
+      <DialogTrigger asChild >
+        <Button  >Upload File
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Upload Files to Organization </DialogTitle>
+          <DialogDescription>
+            <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
+              <FieldGroup>
+                <Controller
+                  name="title"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="form-rhf-demo-title">
+                        Title of your file
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="form-rhf-demo-title"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Enter title"
+                        autoComplete="off"
                       />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
 
-                      <Controller
-                        name="file"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                          <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="form-rhf-demo-title">
-                              Select File
-                            </FieldLabel>
-                            <Input
-                              {...fileRef}
-                              id="form-rhf-demo-title"
-                              aria-invalid={fieldState.invalid}
-                              type="file"
-                              autoComplete="off"
-                              onChange={(event) => {
-                                if (!event.target.files) return;
-                                field.onChange(event.target.files[0])
-                              }}
-                            />
-                            {fieldState.invalid && (
-                              <FieldError errors={[fieldState.error]} />
-                            )}
-                          </Field>
-                        )}
+                <Controller
+                  name="file"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="form-rhf-demo-title">
+                        Select File
+                      </FieldLabel>
+                      <Input
+                        {...fileRef}
+                        id="form-rhf-demo-title"
+                        aria-invalid={fieldState.invalid}
+                        type="file"
+                        autoComplete="off"
+                        onChange={(event) => {
+                          if (!event.target.files) return;
+                          field.onChange(event.target.files[0])
+                        }}
                       />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-                      <Field orientation="horizontal">
+                <Field orientation="horizontal">
 
-                        <Button type="submit"
-                          disabled={form.formState.isLoading}
-                          className="flex gap-1 "
-                        >
-                          {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} 
-                          Submit
-                        </Button>
-                      </Field>
+                  <Button type="submit"
+                    disabled={form.formState.isLoading}
+                    className="flex gap-1 "
+                  >
+                    {form.formState.isSubmitting &&
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    }
+                    Submit
+                  </Button>
+                </Field>
 
-                    </FieldGroup>
-                  </form>
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
+              </FieldGroup>
+            </form>
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
 
   );
 }

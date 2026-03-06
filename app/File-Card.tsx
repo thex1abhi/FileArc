@@ -25,9 +25,10 @@ import { MoreVertical, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
 
 
-function FileCardActions({file}:{file: Doc  }) {
+function FileCardActions({ file }: { file: Doc<"files"> }) {
     const [isConfirmOpen, setisConfirmOpen] = useState(false)
     const deleteFile = useMutation(api.files.deleteFile);
     return (
@@ -42,14 +43,14 @@ function FileCardActions({file}:{file: Doc  }) {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => {
-                            deleteFile(file._id)
+                        <AlertDialogCancel className="cursor-pointer" >Cancel</AlertDialogCancel>
+                        <AlertDialogAction className="cursor-pointer" onClick={async () => {
+                            await deleteFile({ fileId: file._id })
+                            toast.success("File Deleted Successfully")
                         }} >Continue</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
 
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -80,15 +81,14 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
         <Card>
             <CardHeader className="relative" >
                 <CardTitle>{file.name}  </CardTitle>
-                <div className="absolute top-0 right-2 "> <FileCardActions 
-                file={file} /> </div>
-
+                <div className="absolute top-0 right-2 ">
+                    <FileCardActions file={file} />
+                </div>
             </CardHeader>
             <CardContent>
                 <p> Card Content     </p>
             </CardContent>
             <CardFooter>
-                <p> </p>
                 <Button>Downlaod </Button>
             </CardFooter>
         </Card>
