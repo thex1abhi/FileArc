@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        
+        hostname: 'youthful-armadillo-394.convex.cloud',
+       
+      },
+    ],
+  },
 };
 
 export default nextConfig;

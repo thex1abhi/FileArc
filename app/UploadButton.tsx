@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { Doc } from "@/convex/_generated/dataModel";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -26,8 +27,6 @@ const formSchema = z.object({
 export default function UploadButton() {
 
   const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
-
-
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const organization = useOrganization();
   const user = useUser()
@@ -47,22 +46,27 @@ export default function UploadButton() {
 
     if (!orgId) return;
     const postUrl = await generateUploadUrl();
+    const fileTypes = values.file[0].type;
+
     const result = await fetch(postUrl, {
       method: "POST",
-      headers: { "Content-Type": values.file[0].type },
+      headers: { "Content-Type": fileTypes },
       body: values.file[0],
     });
     const { storageId } = await result.json();
-    console.log(values.file[0].type)
 
-
+    const types = {
+      "image/png": "image",
+      "application/pdf": "pdf",
+      "test/csv": "csv"
+    } as Record<string, Doc<"files">["type"]>
 
     try {
       await createFile({
         name: values.title,
         fileId: storageId,
         orgId,
-        type: "image",
+        type: types[fileTypes]
       })
       form.reset();
       setIsFileDialogOpen(false);
