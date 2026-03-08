@@ -73,6 +73,13 @@ export const getFiles = query({
 
 })
 
+export const getFileUrl = query({
+    args: { fileId: v.id("_storage") },
+    async handler(ctx, args) {
+        return await ctx.storage.getUrl(args.fileId);
+    },
+});
+
 export const deleteFile = mutation({
     args: { fileId: v.id("files") },
     async handler(ctx, args) {

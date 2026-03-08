@@ -58,7 +58,7 @@ export default function UploadButton() {
     const types = {
       "image/png": "image",
       "application/pdf": "pdf",
-      "test/csv": "csv"
+      "text/csv": "csv"
     } as Record<string, Doc<"files">["type"]>
 
     try {

@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        
+        protocol:"https",
         hostname: 'youthful-armadillo-394.convex.cloud',
        
       },
@@ -12,4 +12,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default nextConfig; 
