@@ -8,6 +8,7 @@ import {
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -21,7 +22,7 @@ import {
     AlertDialogTitle,
 
 } from "@/components/ui/alert-dialog"
-import { FileTextIcon, GanttChartIcon, ImageIcon, MoreVertical, TrashIcon } from "lucide-react";
+import { FileTextIcon, GanttChartIcon, ImageIcon, MoreVertical, StarIcon, TrashIcon } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -44,11 +45,15 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel className="cursor-pointer" >Cancel</AlertDialogCancel>
-                        <AlertDialogAction className="cursor-pointer" onClick={async () => {
-                            await deleteFile({ fileId: file._id })
-                            toast.success("File Deleted Successfully")
-                        }} >Continue</AlertDialogAction>
+                        <AlertDialogCancel className="cursor-pointer" >
+                            Cancel</AlertDialogCancel>
+                        <AlertDialogAction className="cursor-pointer"
+                            onClick={async () => {
+                                await deleteFile({ fileId: file._id })
+                                toast.success("File Deleted Successfully")
+                            }} >
+                            Continue
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -59,12 +64,22 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuGroup>
+                         {/* favourites */}
                         <DropdownMenuItem
+                            onClick={() => {
+                                
+                            }}
+                            className="flex gap-1   items-center cursor-pointer "
+                        > <StarIcon className="w-4 h-4 " /> Favorite</DropdownMenuItem>
+                        {/* delete */} 
+                        <DropdownMenuSeparator /> 
+                        <DropdownMenuItem 
                             onClick={() => {
                                 setisConfirmOpen(true);
                             }}
                             className="flex gap-1  text-red-500 items-center cursor-pointer "
                         > <TrashIcon className="w-4 h-4 " /> Delete</DropdownMenuItem>
+                       
 
                     </DropdownMenuGroup>
 
@@ -112,9 +127,9 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
                 {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
             </CardContent>
             <CardFooter className="flex justify-center" >
-                <Button onClick={() => { 
+                <Button onClick={() => {
                     if (!fileUrl) return;
-                    window.open(fileUrl, "_blank") 
+                    window.open(fileUrl, "_blank")
                 }} >Download </Button>
             </CardFooter>
         </Card>

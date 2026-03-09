@@ -3,11 +3,11 @@
 import { api } from "@/convex/_generated/api";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import UploadButton from "./dashboard/files/UploadButton";
-import { FileCard } from "./dashboard/files/File-Card";
+import UploadButton from "./dashboard/_components/UploadButton";
+import { FileCard } from "./dashboard/_components/File-Card";
 import Image from "next/image";
 import { FileIcon, Loader2, StarIcon } from "lucide-react";
-import { SearchBar } from "./dashboard/files/SearchBar";
+import { SearchBar } from "./dashboard/_components/SearchBar";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
