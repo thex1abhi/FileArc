@@ -32,7 +32,7 @@ async function hasAccessToOrg(
         return null;
     }
 
-    const hasAccess = user.orgIds.includes(orgId) ||
+    const hasAccess = user.orgIds.some(item => item.orgId === orgId) ||
         user.tokenIdentifier.includes(orgId);
     if (!hasAccess) {
         return null;
@@ -115,6 +115,13 @@ export const deleteFile = mutation({
         if (!access) {
             throw new ConvexError("no access to files");
         }
+        const isAdmin =
+            access.user.orgIds.find((org) => org.orgId === access.file.orgId)
+                ?.role === "admin";
+
+        if (!isAdmin) {
+            throw new ConvexError("You don't have access to this files ")
+        }
 
         await ctx.db.delete(args.fileId)
 
@@ -185,5 +192,5 @@ async function hasAccessToFile(ctx: QueryCtx | MutationCtx, fileId: Id<"files">)
         return null;
     }
 
-    return {user:hasAccess.user, file }; 
+    return { user: hasAccess.user, file };
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
     Card, CardContent, CardFooter, CardHeader, CardTitle,
@@ -24,14 +26,15 @@ import {
 } from "@/components/ui/alert-dialog"
 import {
     FileTextIcon, GanttChartIcon, ImageIcon, MoreVertical,
-    StarHalf
-    , StarIcon, TrashIcon
+    StarIcon, StarOff, TrashIcon
 } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Protect } from "@clerk/nextjs";
+
 
 
 function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorited: boolean }) {
@@ -79,20 +82,25 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
                             className="flex gap-1   items-center cursor-pointer "
                         >{isFavorited ? (
                             <div className="flex gap-1 items-center`" >
-                                <StarHalf className="w-4 h-4 " /> Unfavorite  </div>
+                                <StarOff className="w-4 h-4 " /> Unfavorite  </div>
                         ) : (<div className="flex gap-1 items-center`" >
                             <StarIcon className="w-4 h-4 " /> Favorite </div>
                         )}
 
                         </DropdownMenuItem>
                         {/* delete */}
+                        <Protect
+                            role="org:admin"
+                            fallback={<></>}
+                        >
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            onClick={() => {
-                                setisConfirmOpen(true);
-                            }}
-                            className="flex gap-1  text-red-500 items-center cursor-pointer "
-                        > <TrashIcon className="w-4 h-4 " /> Delete</DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => {
+                                    setisConfirmOpen(true);
+                                }}
+                                className="flex gap-1  text-red-500 items-center cursor-pointer "
+                            > <TrashIcon className="w-4 h-4 " /> Delete</DropdownMenuItem>
+                        </Protect>
 
 
                     </DropdownMenuGroup>
@@ -107,7 +115,7 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
 
 
 
-export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: Doc<"favorites">[] }) {
+export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: Doc<"favorites">[] | undefined }) {
     const fileUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId });
 
     const typeIcons = {
@@ -116,7 +124,7 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
         "csv": <GanttChartIcon />,
     } as Record<Doc<"files">["type"], ReactNode>;
 
-    const isFavorited = favorites.some((favorite) => favorite.fileId === file._id);
+    const isFavorited = favorites?.some((favorite) => favorite.fileId === file._id) ?? false;
 
     return (
         <Card>
