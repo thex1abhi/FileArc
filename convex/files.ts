@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
+import { internalMutation, mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
 import { fileTypes } from "./schema";
 import { Id } from "./_generated/dataModel";
 
@@ -96,7 +96,7 @@ export const getFiles = query({
 
         if (args.deletedOnly) {
             files = files.filter(file => file.shouldDelete);
-        } else{
+        } else {
             files = files.filter(file => !file.shouldDelete);
         }
 
@@ -113,6 +113,22 @@ export const getFileUrl = query({
     },
 });
 
+export const deleteAllFiles = internalMutation({
+    args: {},
+    async handler(ctx) {
+
+        const files = await ctx.db.query("files")
+            .withIndex("by_shouldDelete", (q) => q.eq("shouldDelete", true))
+            .collect();
+
+        await Promise.all(files.map(async (file) => {
+            await ctx.storage.delete(file.fileId)
+            return await ctx.db.delete(file._id)
+        })
+        )
+    }
+})
+
 export const deleteFile = mutation({
     args: { fileId: v.id("files") },
     async handler(ctx, args) {
@@ -122,14 +138,14 @@ export const deleteFile = mutation({
         if (!access) {
             throw new ConvexError("no access to files");
         }
-       
+
         await ctx.db.patch(args.fileId, {
             shouldDelete: true,
         })
 
 
     },
-}) 
+})
 
 export const RestoreFile = mutation({
     args: { fileId: v.id("files") },
@@ -140,14 +156,14 @@ export const RestoreFile = mutation({
         if (!access) {
             throw new ConvexError("no access to files");
         }
-       
+
         await ctx.db.patch(args.fileId, {
-            shouldDelete: false, 
+            shouldDelete: false,
         })
 
 
     },
-}) 
+})
 
 
 export const ToggleFavorite = mutation({

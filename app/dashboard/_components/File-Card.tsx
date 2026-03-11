@@ -100,7 +100,7 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
                                     if (file.shouldDelete) {
                                         restoreFile({
                                             fileId: file._id,
-                                        })
+                                        })  
                                     } else {
                                         setisConfirmOpen(true);
                                     }
