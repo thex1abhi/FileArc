@@ -129,7 +129,26 @@ export const deleteFile = mutation({
 
 
     },
-})
+}) 
+
+export const RestoreFile = mutation({
+    args: { fileId: v.id("files") },
+    async handler(ctx, args) {
+
+        const access = await hasAccessToFile(ctx, args.fileId)
+
+        if (!access) {
+            throw new ConvexError("no access to files");
+        }
+       
+        await ctx.db.patch(args.fileId, {
+            shouldDelete: false, 
+        })
+
+
+    },
+}) 
+
 
 export const ToggleFavorite = mutation({
     args: { fileId: v.id("files") },

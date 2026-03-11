@@ -26,7 +26,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import {
     FileTextIcon, GanttChartIcon, ImageIcon, MoreVertical,
-    StarIcon, StarOff, TrashIcon
+    StarIcon, StarOff, TrashIcon,
+    UndoIcon
 } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
@@ -41,6 +42,7 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
     const [isConfirmOpen, setisConfirmOpen] = useState(false);
     const ToggleFavorite = useMutation(api.files.ToggleFavorite);
     const deleteFile = useMutation(api.files.deleteFile);
+    const restoreFile = useMutation(api.files.RestoreFile);
     return (
         <>
             <AlertDialog open={isConfirmOpen} onOpenChange={setisConfirmOpen} >
@@ -92,13 +94,25 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
                             role="org:admin"
                             fallback={<></>}
                         >
-                        <DropdownMenuSeparator />
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 onClick={() => {
-                                    setisConfirmOpen(true);
+                                    if (file.shouldDelete) {
+                                        restoreFile({
+                                            fileId: file._id,
+                                        })
+                                    } else {
+                                        setisConfirmOpen(true);
+                                    }
                                 }}
-                                className="flex gap-1  text-red-500 items-center cursor-pointer "
-                            > <TrashIcon className="w-4 h-4 " /> Delete</DropdownMenuItem>
+                                className="flex gap-1   items-center cursor-pointer "
+                            >
+                                {file.shouldDelete ? <div className="text-green-600 flex items-center gap-2"> <UndoIcon className="w-4   h-4 " />  Restore </div> :
+                                    <div className="flex items-center text-red-500   gap-2" >
+                                        <TrashIcon className="w-4 h-4  " /> Delete
+                                    </div>}
+
+                            </DropdownMenuItem>
                         </Protect>
 
 
