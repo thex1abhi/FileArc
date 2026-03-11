@@ -7,7 +7,7 @@ import { useMutation } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import {
-  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle,
+  Dialog, DialogContent,  DialogHeader, DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import * as z from "zod"
@@ -97,75 +97,73 @@ export default function UploadButton() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Upload Files to Organization </DialogTitle>
-          <DialogDescription>
-            <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-              <FieldGroup>
-                <Controller
-                  name="title"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="form-rhf-demo-title">
-                        Title of your file
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="form-rhf-demo-title"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Enter title"
-                        autoComplete="off"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-
-
-                <Controller
-                  name="file"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="form-rhf-demo-title">
-                        Select File
-                      </FieldLabel>
-                      <Input
-                        {...fileRef}
-                        id="form-rhf-demo-title"
-                        aria-invalid={fieldState.invalid}
-                        type="file"
-                        autoComplete="off"
-                        onChange={(event) => {
-                          if (!event.target.files) return;
-                          field.onChange(event.target.files[0])
-                        }}
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-
-                <Field orientation="horizontal">
-
-                  <Button type="submit"
-                    disabled={form.formState.isLoading}
-                    className="flex gap-1 "
-                  >
-                    {form.formState.isSubmitting &&
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    }
-                    Submit
-                  </Button>
-                </Field>
-
-              </FieldGroup>
-            </form>
-          </DialogDescription>
         </DialogHeader>
+        <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
+          <FieldGroup>
+            <Controller
+              name="title"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="form-rhf-demo-title">
+                    Title of your file
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="form-rhf-demo-title"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Enter title"
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+
+            <Controller
+              name="file"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="form-rhf-demo-title">
+                    Select File
+                  </FieldLabel>
+                  <Input
+                    {...fileRef}
+                    id="form-rhf-demo-title"
+                    aria-invalid={fieldState.invalid}
+                    type="file"
+                    autoComplete="off"
+                    onChange={(event) => {
+                      if (!event.target.files) return;
+                      field.onChange(event.target.files[0])
+                    }}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Field orientation="horizontal">
+
+              <Button type="submit"
+                disabled={form.formState.isLoading}
+                className="flex gap-1 "
+              >
+                {form.formState.isSubmitting &&
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                }
+                Submit
+              </Button>
+            </Field>
+
+          </FieldGroup>
+        </form>
       </DialogContent>
     </Dialog>
 

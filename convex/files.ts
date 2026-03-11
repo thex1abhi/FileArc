@@ -67,7 +67,8 @@ export const getFiles = query({
     args: {
         orgId: v.string(),
         query: v.optional(v.string()),
-        favorites: v.optional(v.boolean())
+        favorites: v.optional(v.boolean()),
+        deletedOnly: v.optional(v.boolean())
     },
     async handler(ctx, args) {
 
@@ -93,6 +94,12 @@ export const getFiles = query({
                 favorites.some((favorite) => favorite.fileId === file._id))
         }
 
+        if (args.deletedOnly) {
+            files = files.filter(file => file.shouldDelete);
+        } else{
+            files = files.filter(file => !file.shouldDelete);
+        }
+
         return files;
 
     },
@@ -115,15 +122,11 @@ export const deleteFile = mutation({
         if (!access) {
             throw new ConvexError("no access to files");
         }
-        const isAdmin =
-            access.user.orgIds.find((org) => org.orgId === access.file.orgId)
-                ?.role === "admin";
+       
+        await ctx.db.patch(args.fileId, {
+            shouldDelete: true,
+        })
 
-        if (!isAdmin) {
-            throw new ConvexError("You don't have access to this files ")
-        }
-
-        await ctx.db.delete(args.fileId)
 
     },
 })

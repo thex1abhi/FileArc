@@ -46,10 +46,9 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
             <AlertDialog open={isConfirmOpen} onOpenChange={setisConfirmOpen} >
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogTitle>Are you  sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your files
-                            from our servers.
+                            This action will  mark the file for our deletion process
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -58,7 +57,7 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
                         <AlertDialogAction className="cursor-pointer"
                             onClick={async () => {
                                 await deleteFile({ fileId: file._id })
-                                toast.success("File Deleted Successfully")
+                                toast.success("File marked for deletion ")
                             }} >
                             Continue
                         </AlertDialogAction>

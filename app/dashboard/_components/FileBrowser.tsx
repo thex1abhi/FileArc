@@ -20,7 +20,11 @@ function PlaceHolder() {
     )
 }
 
-export function FilesBrowser({ title, favoritesOnly }: { title: string, favoritesOnly?: boolean; }) {
+export function FilesBrowser({ title, favoritesOnly, deletedOnly }: {
+    title: string,
+    favoritesOnly?: boolean;
+    deletedOnly?: boolean;
+}) {
 
     const organization = useOrganization();
     const user = useUser();
@@ -33,38 +37,38 @@ export function FilesBrowser({ title, favoritesOnly }: { title: string, favorite
         orgId = organization.organization?.id ?? user.user?.id
     }
 
-    const favorites = useQuery(api.files.getAllFavorites, 
-        orgId? { orgId } : "skip" 
+    const favorites = useQuery(api.files.getAllFavorites,
+        orgId ? { orgId } : "skip"
     )
 
-const files = useQuery(api.files.getFiles,
-    orgId ? { orgId, query, favorites: favoritesOnly } : "skip");
- 
-const isLoading = files === undefined;
+    const files = useQuery(api.files.getFiles,
+        orgId ? { orgId, query, favorites: favoritesOnly ,deletedOnly} : "skip");
 
-return (
+    const isLoading = files === undefined;
 
-    <div>
+    return (
 
-        {!isLoading && (
-            <div className="flex justify-between items-center mb-8 " >
-                <h1 className="text-4xl font-bold" > {title} </h1>
-                <SearchBar query={query} setquery={setquery} />
-                <UploadButton />
+        <div>
+
+            {!isLoading && (
+                <div className="flex justify-between items-center mb-8 " >
+                    <h1 className="text-4xl font-bold" > {title} </h1>
+                    <SearchBar query={query} setquery={setquery} />
+                    <UploadButton />
+                </div>
+            )}
+
+            {files?.length === 0 && (
+                <PlaceHolder />
+
+            )}
+
+            <div className="grid grid-cols-3  gap-4 " >
+                {files?.map((file) => {
+                    return <FileCard favorites={favorites ?? []} key={file._id} file={file} />
+                })}
             </div>
-        )}
-
-        {files?.length === 0 && (
-            <PlaceHolder />
-
-        )}
-
-        <div className="grid grid-cols-3  gap-4 " >
-            {files?.map((file) => {
-                return <FileCard favorites={favorites ?? []  }   key={file._id} file={file} />
-            })}
         </div>
-    </div>
 
-);
+    );
 }
