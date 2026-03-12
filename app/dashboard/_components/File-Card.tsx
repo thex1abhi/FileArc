@@ -5,6 +5,7 @@ import {
     Card, CardContent, CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card"
 import { Doc } from "@/convex/_generated/dataModel";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -43,6 +44,8 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
     const ToggleFavorite = useMutation(api.files.ToggleFavorite);
     const deleteFile = useMutation(api.files.deleteFile);
     const restoreFile = useMutation(api.files.RestoreFile);
+
+
     return (
         <>
             <AlertDialog open={isConfirmOpen} onOpenChange={setisConfirmOpen} >
@@ -100,7 +103,7 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
                                     if (file.shouldDelete) {
                                         restoreFile({
                                             fileId: file._id,
-                                        })  
+                                        })
                                     } else {
                                         setisConfirmOpen(true);
                                     }
@@ -130,6 +133,9 @@ function FileCardActions({ file, isFavorited }: { file: Doc<"files">, isFavorite
 
 export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: Doc<"favorites">[] | undefined }) {
     const fileUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId });
+    const userProfile = useQuery(api.users.getUserProfile, {
+        userId: file.userId,
+    });
 
     const typeIcons = {
         "image": <ImageIcon />,
@@ -164,6 +170,13 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
                 {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
             </CardContent>
             <CardFooter className="flex justify-center" >
+
+                <Avatar>
+                    <AvatarImage src={userProfile?.image} />
+                    <AvatarFallback> UserImage </AvatarFallback>
+                </Avatar> 
+                {userProfile?.name} 
+
                 <Button onClick={() => {
                     if (!fileUrl) return;
                     window.open(fileUrl, "_blank")

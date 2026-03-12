@@ -1,7 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
-import { fileTypes } from "./schema";
 import { Id } from "./_generated/dataModel";
+import { fileTypes } from "./schema";
 
 
 export const generateUploadUrl = mutation({
@@ -32,9 +32,15 @@ async function hasAccessToOrg(
         return null;
     }
 
-    const hasAccess = user.orgIds.some(item => item.orgId === orgId) ||
-        user.tokenIdentifier.includes(orgId);
+    // allow access if the org is in the user's list, encoded in the token,
+    // or matches the user's own id (personal org)
+    const hasAccess =
+        user.orgIds.some(item => item.orgId === orgId) ||
+        user.tokenIdentifier.includes(orgId) ||
+        user._id.toString() === orgId;
     if (!hasAccess) {
+        console.log(`denied access in hasAccessToOrg orgId=${orgId} user=${user._id.toString()}
+         token=${user.tokenIdentifier}`);
         return null;
     }
 
@@ -46,7 +52,7 @@ export const createfile = mutation({
         name: v.string(),
         fileId: v.id("_storage"),
         orgId: v.string(),
-        type: fileTypes,
+        type: v.optional(fileTypes), 
     },
     async handler(ctx, args) {
 
@@ -59,7 +65,8 @@ export const createfile = mutation({
             name: args.name,
             fileId: args.fileId,
             orgId: args.orgId,
-            type: args.type,
+            type: args.type ?? "image",
+            userId: hasAccess.user._id,
         })
     }
 })

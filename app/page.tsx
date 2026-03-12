@@ -30,6 +30,7 @@ export default function Home() {
 
 
   let orgId: string | undefined = undefined;
+  const isOrgLoading = !organization.isLoaded || !user.isLoaded;
 
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id
@@ -37,8 +38,9 @@ export default function Home() {
 
 
   const files = useQuery(api.files.getFiles, orgId ? { orgId, query } : "skip");
+  const favorites = useQuery(api.files.getAllFavorites, orgId ? { orgId } : "skip");
 
-  const isLoading = files === undefined;
+  const isLoading = isOrgLoading || (orgId != null && files === undefined); 
   return (
     <>
       <div className="container mx-auto pt-12  " >
@@ -85,7 +87,7 @@ export default function Home() {
 
             <div className="grid grid-cols-3  gap-4 " >
               {files?.map((file) => {
-                return <FileCard key={file._id} file={file} />
+                return <FileCard key={file._id} file={file} favorites={favorites} />
               })}
             </div>
           </div>
