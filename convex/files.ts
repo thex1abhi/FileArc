@@ -17,59 +17,62 @@ export const generateUploadUrl = mutation({
 });
 
 
-async function hasAccessToOrg(
-    ctx: QueryCtx | MutationCtx,
-    orgId: string
+export async function hasAccessToOrg(
+  ctx: QueryCtx | MutationCtx,
+  orgId: string
 ) {
-    const identity = await ctx.auth.getUserIdentity()
-    if (!identity) {
-        return null;
-    }
-    const user = await ctx.db.query("users").withIndex("by_tokenIdentifier", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
-    ).first();
-    if (!user) {
-        return null;
-    }
+  const identity = await ctx.auth.getUserIdentity();
 
-    // allow access if the org is in the user's list, encoded in the token,
-    // or matches the user's own id (personal org)
-    const hasAccess =
-        user.orgIds.some(item => item.orgId === orgId) ||
-        user.tokenIdentifier.includes(orgId) ||
-        user._id.toString() === orgId;
-    if (!hasAccess) {
-        console.log(`denied access in hasAccessToOrg orgId=${orgId} user=${user._id.toString()}
-         token=${user.tokenIdentifier}`);
-        return null;
-    }
+  if (!identity) {
+    return null;
+  }
 
-    return { user };
+  const user = await ctx.db
+    .query("users")
+    .withIndex("by_tokenIdentifier", (q) =>
+      q.eq("tokenIdentifier", identity.tokenIdentifier)
+    )
+    .first();
+
+  if (!user) {
+    return null;
+  }
+
+  const hasAccess =
+    user.orgIds.some((item) => item.orgId === orgId) ||
+    user.tokenIdentifier.includes(orgId);
+
+  if (!hasAccess) {
+    return null;
+  }
+
+  return { user };
 }
 
+
 export const createfile = mutation({
-    args: {
-        name: v.string(),
-        fileId: v.id("_storage"),
-        orgId: v.string(),
-        type: v.optional(fileTypes), 
-    },
-    async handler(ctx, args) {
+  args: {
+    name: v.string(),
+    fileId: v.id("_storage"),
+    orgId: v.string(),
+    type: fileTypes,
+  },
+  async handler(ctx, args) {
+    const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
-        const hasAccess = await hasAccessToOrg(ctx, args.orgId)
-
-        if (!hasAccess) {
-            throw new ConvexError("You do not have access to this org")
-        }
-        await ctx.db.insert('files', {
-            name: args.name,
-            fileId: args.fileId,
-            orgId: args.orgId,
-            type: args.type ?? "image",
-            userId: hasAccess.user._id,
-        })
+    if (!hasAccess) {
+      throw new ConvexError("you do not have access to this org");
     }
-})
+
+    await ctx.db.insert("files", {
+      name: args.name,
+      orgId: args.orgId,
+      fileId: args.fileId,
+      type: args.type,
+      userId: hasAccess.user._id,
+    });
+  },
+});
 export const getFiles = query({
     args: {
         orgId: v.string(),
