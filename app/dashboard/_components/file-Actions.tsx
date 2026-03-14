@@ -40,6 +40,8 @@ export function FileCardActions({ file, isFavorited }:
     const deleteFile = useMutation(api.files.deleteFile);
     const restoreFile = useMutation(api.files.RestoreFile);
     const fileUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId });
+    const me = useQuery(api.users.getMe);
+
     return (
         <>
             <AlertDialog open={isConfirmOpen} onOpenChange={setisConfirmOpen} >
@@ -100,7 +102,11 @@ export function FileCardActions({ file, isFavorited }:
 
                         {/* delete */}
                         <Protect
-                            role="org:admin"
+                            condition={(check) => {
+                                return check({
+                                    role: "org:admin"
+                                }) || file.userId === me?._id; 
+                            }}
                             fallback={<></>}
                         >
 

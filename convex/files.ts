@@ -18,67 +18,68 @@ export const generateUploadUrl = mutation({
 
 
 export async function hasAccessToOrg(
-  ctx: QueryCtx | MutationCtx,
-  orgId: string
+    ctx: QueryCtx | MutationCtx,
+    orgId: string
 ) {
-  const identity = await ctx.auth.getUserIdentity();
+    const identity = await ctx.auth.getUserIdentity();
 
-  if (!identity) {
-    return null;
-  }
+    if (!identity) {
+        return null;
+    }
 
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_tokenIdentifier", (q) =>
-      q.eq("tokenIdentifier", identity.tokenIdentifier)
-    )
-    .first();
+    const user = await ctx.db
+        .query("users")
+        .withIndex("by_tokenIdentifier", (q) =>
+            q.eq("tokenIdentifier", identity.tokenIdentifier)
+        )
+        .first();
 
-  if (!user) {
-    return null;
-  }
+    if (!user) {
+        return null;
+    }
 
-  const hasAccess =
-    user.orgIds.some((item) => item.orgId === orgId) ||
-    user.tokenIdentifier.includes(orgId);
+    const hasAccess =
+        user.orgIds.some((item) => item.orgId === orgId) ||
+        user.tokenIdentifier.includes(orgId);
 
-  if (!hasAccess) {
-    return null;
-  }
+    if (!hasAccess) {
+        return null;
+    }
 
-  return { user };
+    return { user };
 }
 
 
 export const createfile = mutation({
-  args: {
-    name: v.string(),
-    fileId: v.id("_storage"),
-    orgId: v.string(),
-    type: fileTypes,
-  },
-  async handler(ctx, args) {
-    const hasAccess = await hasAccessToOrg(ctx, args.orgId);
+    args: {
+        name: v.string(),
+        fileId: v.id("_storage"),
+        orgId: v.string(),
+        type: fileTypes,
+    },
+    async handler(ctx, args) {
+        const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
-    if (!hasAccess) {
-      throw new ConvexError("you do not have access to this org");
-    }
+        if (!hasAccess) {
+            throw new ConvexError("you do not have access to this org");
+        }
 
-    await ctx.db.insert("files", {
-      name: args.name,
-      orgId: args.orgId,
-      fileId: args.fileId,
-      type: args.type,
-      userId: hasAccess.user._id,
-    });
-  },
+        await ctx.db.insert("files", {
+            name: args.name,
+            orgId: args.orgId,
+            fileId: args.fileId,
+            type: args.type,
+            userId: hasAccess.user._id,
+        });
+    },
 });
 export const getFiles = query({
     args: {
         orgId: v.string(),
         query: v.optional(v.string()),
         favorites: v.optional(v.boolean()),
-        deletedOnly: v.optional(v.boolean())
+        deletedOnly: v.optional(v.boolean()),
+        type: v.optional(fileTypes),
     },
     async handler(ctx, args) {
 
@@ -110,6 +111,10 @@ export const getFiles = query({
             files = files.filter(file => !file.shouldDelete);
         }
 
+        if (args.type) {
+            files = files.filter((file) => file.type === args.type)
+        }
+
         return files;
 
     },
@@ -121,7 +126,7 @@ export const getFileUrl = query({
     async handler(ctx, args) {
         return await ctx.storage.getUrl(args.fileId);
     },
-}); 
+});
 
 export const deleteAllFiles = internalMutation({
     args: {},
@@ -148,11 +153,16 @@ export const deleteFile = mutation({
         if (!access) {
             throw new ConvexError("no access to files");
         }
+        const canDelete = access.file.userId === access.user._id ||
+            access.user.orgIds.find((org) => org.orgId === access.file.orgId)
+                ?.role === "admin";
 
+        if (!canDelete) {
+            throw new ConvexError("you don't have access to delete this files ")
+        }
         await ctx.db.patch(args.fileId, {
             shouldDelete: true,
         })
-
 
     },
 })
@@ -166,7 +176,13 @@ export const RestoreFile = mutation({
         if (!access) {
             throw new ConvexError("no access to files");
         }
+        const canRestore = access.file.userId === access.user._id ||
+            access.user.orgIds.find((org) => org.orgId === access.file.orgId)
+                ?.role === "admin";
 
+        if (!canRestore) {
+            throw new ConvexError("you cannot restore this file ")
+        }
         await ctx.db.patch(args.fileId, {
             shouldDelete: false,
         })
