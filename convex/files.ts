@@ -121,7 +121,7 @@ export const getFileUrl = query({
     async handler(ctx, args) {
         return await ctx.storage.getUrl(args.fileId);
     },
-});
+}); 
 
 export const deleteAllFiles = internalMutation({
     args: {},

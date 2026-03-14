@@ -11,7 +11,7 @@ export function Header() {
           <div className="text-3xl font-semibold font-serif  flex items-center justify-center" > 
             <Image  src="/logo.png"  width={40} height={5}  alt="filearc logo" /> File<span className="text-red-500" >Arc</span>  </div></Link> 
          
-             <Link href="/dashboard " className="text-xl flex items-center justify-center font-semibold font-serif gap-2 " > 
+             <Link href="/dashboard/files" className="text-xl flex items-center justify-center font-semibold font-serif gap-2 " > 
              Dashboard <MoveRightIcon/> </Link> 
            
             <div className="flex gap-2 ">
