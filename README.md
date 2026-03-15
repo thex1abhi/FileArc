@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+ 📁 FileArc – File Storage & Management System
 
-## Getting Started
+FileArc is a modern file storage and management platform** built with Next.js, Clerk Authentication, and Convex.  
+It allows users to securely upload, store, organize, and manage files with a simple and intuitive interface.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+  Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🔐 Authentication with Clerk
+  - Secure signup and login
+  - Session management
+  - Protected routes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 📂 File Management
+  - Upload files
+  - View stored files
+  - Download files
+  - Delete files
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- ⭐ Favorites System
+  - Mark files as favorite
+  - Easily access important files
 
-## Learn More
+- 🗂 File Organization
+  - Categorize files by type
+  - Search and browse files
 
-To learn more about Next.js, take a look at the following resources:
+- ⚡ Real-time Backend
+  - Powered by Convex
+  - Fast queries and mutations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 🎨 Modern UI
+  - Built with Next.js App Router
+  - Responsive design
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+ 🛠 Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Technology | Purpose |
+|-----------|--------|
+| Next.js | Frontend Framework |
+| Clerk | Authentication |
+| Convex | Backend & Database |
+| TypeScript | Type Safety |
+| Tailwind CSS | Styling |
+| Lucide Icons | Icons |
+ 
+### Homepage
+![homepage1](public/screenshots/home1.jpg)
+![homepage2](public/screenshots/home2.jpg)
+ 
+### Dashboard
+![Dashboard](public/screenshots/dashboard.jpg)   
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Login
+![Uploadbtn](public/screenshots/LoginSignup.jpg)  
+
+### Upload File
+![Uploadbtn](public/screenshots/uploadbtn.jpg)  
+
+### Favourite File
+![Uploadbtn](public/screenshots/Favourties.jpg)  
+
+### Trash Files
+![Uploadbtn](public/screenshots/trashjpg.jpg)   
+
+
+
+
+
+
+

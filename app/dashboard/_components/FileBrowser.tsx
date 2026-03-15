@@ -22,13 +22,15 @@ import {
 } from "@/components/ui/select"
 import { Doc } from "@/convex/_generated/dataModel";
 import { Label } from "@/components/ui/label";
+import { usePathname } from "next/navigation";
 
-function PlaceHolder() {
+function PlaceHolder() { 
+    const pathname=usePathname()
     return (
         <div className="flex flex-col gap-8 w-full  items-center mt-12 " >
             <Image src="/empty.png" alt="Image Icon" width={300} height={300} />
             <div className="text-2xl" >  You have no files yet  </div>
-            <UploadButton />
+            {pathname !== "/dashboard/trash" && <UploadButton />}
         </div>
     )
 }
@@ -43,7 +45,7 @@ export function FilesBrowser({ title, favoritesOnly, deletedOnly }: {
     const user = useUser();
     const [query, setquery] = useState("");
     const [type, setType] = useState<Doc<"files">['type'] | 'all'>("all");
-
+    const pathname = usePathname();
 
     let orgId: string | undefined = undefined;
 
@@ -85,7 +87,7 @@ export function FilesBrowser({ title, favoritesOnly, deletedOnly }: {
                 <div className="flex justify-between items-center mb-8 " >
                     <h1 className="text-4xl font-bold" > {title} </h1>
                     <SearchBar query={query} setquery={setquery} />
-                    <UploadButton />
+                    {pathname !== "/dashboard/trash" && <UploadButton />}
                 </div>
             )}
             <Tabs defaultValue="grid"  >
@@ -96,11 +98,11 @@ export function FilesBrowser({ title, favoritesOnly, deletedOnly }: {
                     </TabsList>
                     <div className="flex items-center gap-2 ">
                         <Label htmlFor="type-select" className="text-xl text-gray-700 font-semibold " > Type Filter </Label>
-                        <Select  
-                        
-                        value={type} onValueChange={(newType) => {
-                            setType(newType as any);
-                        }}>
+                        <Select
+
+                            value={type} onValueChange={(newType) => {
+                                setType(newType as any );
+                            }}> 
                             <SelectTrigger id="type-select" className="w-45px">
                                 <SelectValue placeholder="Type" />
                             </SelectTrigger>
