@@ -55,7 +55,7 @@ It allows users to securely upload, store, organize, and manage files with a sim
 ![Dashboard](public/screenshots/dashboard.jpg)   
 
 ### Login
-![Uploadbtn](public/screenshots/LoginSignup.jpg)  
+![login](public/screenshots/Loginsignup.jpg)  
 
 ### Upload File
 ![Uploadbtn](public/screenshots/uploadbtn.jpg)  
