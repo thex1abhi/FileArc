@@ -24,8 +24,8 @@ import { Doc } from "@/convex/_generated/dataModel";
 import { Label } from "@/components/ui/label";
 import { usePathname } from "next/navigation";
 
-function PlaceHolder() { 
-    const pathname=usePathname()
+function PlaceHolder() {
+    const pathname = usePathname()
     return (
         <div className="flex flex-col gap-8 w-full  items-center mt-12 " >
             <Image src="/empty.png" alt="Image Icon" width={300} height={300} />
@@ -102,7 +102,7 @@ export function FilesBrowser({ title, favoritesOnly, deletedOnly }: {
 
                             value={type} onValueChange={(newType) => {
                                 setType(newType as any );
-                            }}> 
+                            }}>
                             <SelectTrigger id="type-select" className="w-45px">
                                 <SelectValue placeholder="Type" />
                             </SelectTrigger>
@@ -112,6 +112,11 @@ export function FilesBrowser({ title, favoritesOnly, deletedOnly }: {
                                     <SelectItem value="pdf">Pdf</SelectItem>
                                     <SelectItem value="csv">Csv</SelectItem>
                                     <SelectItem value="image">Image</SelectItem>
+                                    <SelectItem value="txt">Text </SelectItem> 
+                                    <SelectItem value="doc">Doc </SelectItem>
+                                    <SelectItem value="zip">Zip </SelectItem>
+                                    <SelectItem value="json">JSON </SelectItem> 
+
                                 </SelectGroup>
                             </SelectContent>
                         </Select>

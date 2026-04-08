@@ -16,7 +16,6 @@ import Image from "next/image";
 import { FileCardActions } from './file-Actions';
 
 
-
 export function FileCard({
     file }: {
         file: Doc<"files"> & { isFavorited: boolean }

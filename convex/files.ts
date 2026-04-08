@@ -3,7 +3,6 @@ import { internalMutation, mutation, MutationCtx, query, QueryCtx } from "./_gen
 import { Id } from "./_generated/dataModel";
 import { fileTypes } from "./schema";
 
-
 export const generateUploadUrl = mutation({
 
     args: {},

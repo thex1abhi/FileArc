@@ -7,7 +7,7 @@ import { useMutation } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import {
-  Dialog, DialogContent,  DialogHeader, DialogTitle,
+  Dialog, DialogContent, DialogHeader, DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import * as z from "zod"
@@ -56,17 +56,33 @@ export default function UploadButton() {
     const { storageId } = await result.json();
 
     const types = {
+      // images
       "image/png": "image",
+      "image/jpeg": "jpg",
+      "image/jpg": "jpg",
+      // documents
       "application/pdf": "pdf",
-      "text/csv": "csv"
+      "text/plain": "txt",
+      "application/msword": "doc",
+      // data
+      "text/csv": "csv",
+      "application/json": "json",
+      // archives
+      "application/zip": "zip",
+      "application/x-zip-compressed": "zip",
     } as Record<string, Doc<"files">["type"]>
+
+    const type = types[fileTypes];
+    if (!type) {
+      throw new Error(`Unsupported file type: ${fileTypes}`);
+    }
 
     try {
       await createFile({
         name: values.title,
         fileId: storageId,
         orgId,
-        type: types[fileTypes]
+        type,
       })
       form.reset();
       setIsFileDialogOpen(false);
