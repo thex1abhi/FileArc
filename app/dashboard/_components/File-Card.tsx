@@ -7,7 +7,12 @@ import {
 import { Doc } from "@/convex/_generated/dataModel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
-    FileTextIcon, GanttChartIcon, ImageIcon
+   
+    FileArchive,
+    FileBraces,
+    FileSearchCorner,
+    FileTextIcon, GanttChartIcon, ImageIcon,
+    TextInitial
 } from "lucide-react";
 import { ReactNode } from "react";
 import { useQuery } from "convex/react";
@@ -29,6 +34,11 @@ export function FileCard({
         "image": <ImageIcon />,
         "pdf": <FileTextIcon />,
         "csv": <GanttChartIcon />,
+        "txt": <TextInitial />,
+        "doc": <FileSearchCorner/> , 
+        "json": < FileBraces />, 
+        "zip": < FileArchive />
+
     } as Record<Doc<"files">["type"], ReactNode>;
 
     return (
@@ -52,7 +62,11 @@ export function FileCard({
                     )
                 }
                 {file.type === "csv" && <GanttChartIcon className="w-20 h-20" />}
-                {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
+                {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />} 
+                  {file.type === "txt" && <TextInitial className="w-20 h-20" />} 
+                    {file.type === "doc" && <FileSearchCorner className="w-20 h-20" />}
+                     {file.type === "json" && <FileBraces className="w-20 h-20" />}  
+                      {file.type === "zip" && < FileArchive className="w-20 h-20" />}
             </CardContent>
             <CardFooter className="flex  justify-between " >
 
