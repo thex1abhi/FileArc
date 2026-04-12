@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol:"https",
-        hostname: 'youthful-armadillo-394.convex.cloud',
+        hostname: 'fleet-dinosaur-742.convex.cloud',
        
       },
     ],
