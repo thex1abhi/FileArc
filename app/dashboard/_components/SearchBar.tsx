@@ -31,7 +31,7 @@ export function SearchBar({ query, setquery }: {
     }
     return (<div>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2 items-center" >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2 sm:flex-row sm:items-center" >
             <Controller
                 name="query"
                 control={form.control}

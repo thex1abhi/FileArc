@@ -84,26 +84,26 @@ export function FilesBrowser({ title, favoritesOnly, deletedOnly }: {
 
 
             {!isLoading && (
-                <div className="flex justify-between items-center mb-8 " >
+                <div className="flex flex-col gap-4 justify-between mb-8 sm:flex-row sm:items-center" >
                     <h1 className="text-4xl font-bold" > {title} </h1>
                     <SearchBar query={query} setquery={setquery} />
                     {pathname !== "/dashboard/trash" && <UploadButton />}
                 </div>
             )}
             <Tabs defaultValue="grid"  >
-                <div className="flex justify-between items-center" >
-                    <TabsList className="mb-4" >
+                <div className="flex flex-col gap-4 justify-between mb-6 sm:flex-row sm:items-center" >
+                    <TabsList className="flex flex-wrap gap-2 mb-0" >
                         <TabsTrigger value="grid" className="flex gap-2 items-center " > <GridIcon /> Grid</TabsTrigger>
                         <TabsTrigger value="table" className="flex gap-2 items-center " ><RowsIcon /> Table</TabsTrigger>
                     </TabsList>
-                    <div className="flex items-center gap-2 ">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                         <Label htmlFor="type-select" className="text-xl text-gray-700 font-semibold " > Type Filter </Label>
                         <Select
 
                             value={type} onValueChange={(newType) => {
                                 setType(newType as any );
                             }}>
-                            <SelectTrigger id="type-select" className="w-45px">
+                            <SelectTrigger id="type-select" className="w-40">
                                 <SelectValue placeholder="Type" />
                             </SelectTrigger>
                             <SelectContent>
@@ -130,7 +130,7 @@ export function FilesBrowser({ title, favoritesOnly, deletedOnly }: {
                 )}
 
                 <TabsContent value="grid" >
-                    <div className="grid grid-cols-3  gap-4 " >
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3" >
                         {modifiedFiles?.map((file) => {
                             return <FileCard key={file._id} file={file} />
                         })}

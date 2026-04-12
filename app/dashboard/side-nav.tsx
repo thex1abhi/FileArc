@@ -10,7 +10,7 @@ export default function SideNav() {
 
     const pathname = usePathname();
     return (
-        <div className="w-40  flex flex-col gap-4 " >
+        <div className="w-full max-w-xs flex flex-col gap-4 md:w-40" >
             <Link href="/dashboard/files" >
                 <Button variant={"link"}
                     className={clsx("flex gap-2 cursor-pointer ", {

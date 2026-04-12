@@ -13,8 +13,8 @@ export default function DashboardLayOut({
 }>) {
     return (
 
-        <div className="container mx-auto pt-12  " >
-            <div className="flex gap-8">
+        <div className="container mx-auto pt-12 px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col gap-8 md:flex-row">
              <SideNav />
                 <div className="w-full" >
                     {children}

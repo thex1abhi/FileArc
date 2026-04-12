@@ -7,13 +7,13 @@ import Link from "next/link";
 export function Header() {
 
 
-    return <div className="  relative z-10 border-b py-4 bg-gray-50" >
-        <div className="container mx-auto justify-between flex  items-center " >
+    return <div className="relative z-10 border-b py-4 bg-gray-50">
+        <div className="container mx-auto flex flex-col gap-4 px-4 py-2 sm:flex-row sm:items-center sm:justify-between sm:px-0">
             <Link href="/" >
                 <div className="text-3xl font-semibold font-serif  cursor-pointer flex items-center justify-center" >
                     <Image src="/logo.png" width={40} height={5} alt="filearc logo" /> File<span className="text-red-500" >Arc</span>  </div></Link>
             <SignedIn >
-                <Link href="/dashboard/files" className="text-xl flex items-center justify-center font-semibold font-serif gap-2 " >
+                <Link href="/dashboard/files" className="hidden md:inline-flex text-xl items-center justify-center font-semibold font-serif gap-2">
                     Dashboard <MoveRightIcon /> </Link>
             </SignedIn>
 
